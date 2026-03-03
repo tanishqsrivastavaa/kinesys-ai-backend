@@ -1,0 +1,17 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.env
+connect.ps1
+voiceiq.pem
+.vscode
+test data
+test
+set-secrets.ps1

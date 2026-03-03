@@ -1,0 +1,52 @@
+name: build and deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Docker login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: remiscus/kinesys-backend:latest
+      
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            echo "Connection successful!"
+            sudo docker pull remiscus/kinesys-backend:latest
+            sudo docker stop kinesys-backend || true
+            sudo docker rm kinesys-backend || true
+            sudo docker run -d --name kinesys-backend -p 8000:8000 \
+              -e PROJECT_NAME="${{ secrets.PROJECT_NAME }}" \
+              -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+              -e MODE="${{ secrets.MODE }}" \
+              -e DATABASE_HOST="${{ secrets.DATABASE_HOST }}" \
+              -e DATABASE_USER="${{ secrets.DATABASE_USER }}" \
+              -e DATABASE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}" \
+              -e DATABASE_NAME="${{ secrets.DATABASE_NAME }}" \
+              -e DATABASE_PORT="${{ secrets.DATABASE_PORT }}" \
+              -e GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}" \
+              -e GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
+              -e GOOGLE_REDIRECT_URI="${{ secrets.GOOGLE_REDIRECT_URI }}" \
+              -e OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
+              remiscus/kinesys-backend:latest
