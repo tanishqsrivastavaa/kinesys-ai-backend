@@ -1,5 +1,17 @@
-# Kinesys Backend API
+<div align="center">
 
+# ⚙️ Kinesys Backend API
+
+**High-performance async FastAPI backend powering the Kinesys CRM** — leads, calendars, WebSockets, and AI voice agents.
+
+![FastAPI](https://img.shields.io/badge/FastAPI-async-009688?logo=fastapi&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-SQLModel-4169E1?logo=postgresql&logoColor=white)
+![WebSockets](https://img.shields.io/badge/Realtime-WebSockets-blue)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
+</div>
+
+---
 A high-performance, async FastAPI backend for the Kinesys CRM application. Provides RESTful APIs for lead management, Google Calendar integration, real-time communication via WebSockets, and AI-powered voice agent capabilities.
 
 ## Table of Contents
